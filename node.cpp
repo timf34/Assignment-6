@@ -8,7 +8,7 @@ node::node(){
   int pair_dup_count = 0;
   
   pair_tree_root=nullptr;
-  pair_after=nullptr;
-  pair_before=nullptr;
+  //pair_after=nullptr;
+  //pair_before=nullptr;
 }
 
