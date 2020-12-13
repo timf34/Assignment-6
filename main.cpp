@@ -8,6 +8,7 @@ bool build_tree(string new_word, string next_word, node*& tree);
 void search_word(string word, node* tree);
 void print_word(string word, node* location);
 void build_pair_tree (string next_word, node*& pair_tree);
+void search_word_pairs(string word, node*& root);
 
 int main() {
 
@@ -84,7 +85,7 @@ bool build_tree(string new_word, string next_word, node*& tree){
     tree->assign(new_word);
     //tree->pair_tree_root->assign(next_word); This was causing the errors! be careful, use VCS when changing strategy so as not to leave anything straggling!!!!
     //cout << tree->pair_tree_root << endl;
-    cout << new_word << " ";
+    //cout << new_word << " ";
 		build_pair_tree(next_word, tree->pair_tree_root);
     response = true; // it is a new word
     //cout << new_word << endl;
@@ -112,54 +113,23 @@ void build_pair_tree(string next_word, node*& tree){
   if (tree == nullptr){
     node* first_pair = new node();
     first_pair->assign(next_word);
-    tree= first_pair;
-    cout << next_word << endl;
-    //cout << next_word << " " << tree->pair_tree_root << endl;
-  
+    tree = first_pair;
+
   }
   else if (next_word == *placeholder){
-    cout << "repeated pair !!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+
   }
   else if (next_word < *placeholder){
+    //cout << "working234" << endl;
     //node* placeholder = tree->pair_tree_root;
-    cout << " somehtg " << endl;
+    //cout << " somehtg " << endl;
     build_pair_tree(next_word, placeholder->before);
   }
   else if(next_word > *placeholder){
-    //node* placeholder = tree->pair_tree_root;
-     cout << next_word << " " << *placeholder << " somehtg 3 " << placeholder->after << endl;
-     node* p_after = placeholder->after;
-    build_pair_tree(next_word, p_after);
+    build_pair_tree(next_word, placeholder->after);
   }
 }
 
-/*void print_pair_tree(node *tree){
-  if (tree != nullptr) {
-    print_pair_tree(tree->before);
-    cout << "\"" << *tree <<"\" " << tree->count << endl;
-    print_pair_tree(tree->after);
-  }
-}*/
-
-/*void print_pairs(string word, node* tree){
-
-  if(tree == nullptr){
-    cout << "The word \"" << word << "\" was not found." << endl;
-    return;
-  }
-  
-  if (*tree == word){
-    print_word(word, tree);
-    return;
-  }
-  else{
-    if (word < *tree) {
-      search_word(word, tree->before);
-    } else {
-      search_word(word, tree->after);
-    }
-  }
-}*/
 
 void search_word(string word, node* tree){
 
@@ -169,13 +139,16 @@ void search_word(string word, node* tree){
   }
   
   if (*tree == word){
-    print_word(word, tree);
+    tree = tree->pair_tree_root;
+    search_word_pairs(word, tree);
     return;
   }
   else{
     if (word < *tree) {
+      cout << "workingless" << endl;
       search_word(word, tree->before);
-    } else {
+    } else{
+      cout << "workingmore1234" << endl;
       search_word(word, tree->after);
     }
   }
@@ -197,3 +170,12 @@ void print_word(string word, node* location){
 
 }
 
+void search_word_pairs(string word, node*& root){
+
+  if (root != nullptr) {
+    search_word_pairs(word, root->before);
+    cout << "\"" << *root << " " << root->before << endl;
+    search_word_pairs(word, root->after);
+  }
+
+}
