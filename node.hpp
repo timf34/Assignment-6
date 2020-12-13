@@ -12,6 +12,7 @@ class node : public std::string{
   node *before;
 
   int pair_dup_count;
+  int total_pairs;
 
   node *pair_tree_root;
   //node *pair_after;

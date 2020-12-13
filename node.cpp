@@ -6,6 +6,7 @@ node::node(){
   after=nullptr;
 
   int pair_dup_count = 0;
+  int total_pairs = 0;
   
   pair_tree_root=nullptr;
   //pair_after=nullptr;

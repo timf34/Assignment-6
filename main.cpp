@@ -6,9 +6,10 @@ using namespace std;
 
 bool build_tree(string new_word, string next_word, node*& tree);
 void search_word(string word, node* tree);
-void print_word(string word, node* location);
+void print_word_and_pair_count(string word, node* location);
 void build_pair_tree (string next_word, node*& pair_tree);
 void search_word_pairs(string word, node*& root);
+void print_pair_word(node* location);
 
 int main() {
 
@@ -32,6 +33,7 @@ int main() {
     }
     else{
       myfile >> first_word;
+      //my_file >> word;
       int i=0;
       while(myfile >> word){
         if(i==0){
@@ -84,14 +86,13 @@ bool build_tree(string new_word, string next_word, node*& tree){
 		tree = new node();
     tree->assign(new_word);
     //tree->pair_tree_root->assign(next_word); This was causing the errors! be careful, use VCS when changing strategy so as not to leave anything straggling!!!!
-    //cout << tree->pair_tree_root << endl;
-    //cout << new_word << " ";
+    tree->total_pairs++;
 		build_pair_tree(next_word, tree->pair_tree_root);
     response = true; // it is a new word
-    //cout << new_word << endl;
 	} else {
 		if (new_word == *tree) {
 			tree->count++;
+      tree->total_pairs++;
 			response = false; // it is not a new word
       build_pair_tree(next_word, tree->pair_tree_root);
       //cout << new_word << ": " << tree->count <<endl;
@@ -105,24 +106,20 @@ bool build_tree(string new_word, string next_word, node*& tree){
 	}
 	return response;
 }
-//USE VCS!!!!
+
 void build_pair_tree(string next_word, node*& tree){
   node* placeholder = tree;
-  //cout << endl << "placeholder: " << placeholder << endl;
 
   if (tree == nullptr){
     node* first_pair = new node();
     first_pair->assign(next_word);
     tree = first_pair;
-
+    tree->pair_dup_count++;
   }
   else if (next_word == *placeholder){
-
+    tree->pair_dup_count++;
   }
   else if (next_word < *placeholder){
-    //cout << "working234" << endl;
-    //node* placeholder = tree->pair_tree_root;
-    //cout << " somehtg " << endl;
     build_pair_tree(next_word, placeholder->before);
   }
   else if(next_word > *placeholder){
@@ -139,25 +136,39 @@ void search_word(string word, node* tree){
   }
   
   if (*tree == word){
+    print_word_and_pair_count(word, tree);
     tree = tree->pair_tree_root;
     search_word_pairs(word, tree);
     return;
   }
   else{
     if (word < *tree) {
-      cout << "workingless" << endl;
       search_word(word, tree->before);
     } else{
-      cout << "workingmore1234" << endl;
       search_word(word, tree->after);
     }
   }
 }
 
-void print_word(string word, node* location){
-  int count = location->count;
+void print_word_and_pair_count(string word, node* location){
+  int count = location->total_pairs;
 
-  cout << "The word \"" << word << "\" was found ";
+  cout << "Word pairs starting with \"" << word << "\" were found ";
+  if (count == 1){
+   cout << "once."<< endl;
+  }
+  else if(count == 2){
+    cout << "twice."<< endl;
+  }
+  else{
+    cout << count << " times." << endl;
+  }
+
+}
+void print_pair_word(node* location){
+  int count = location->pair_dup_count;
+
+  cout << "The word \"" << *location << "\" was found ";
   if (count == 1){
    cout << "once."<< endl;
   }
@@ -174,7 +185,7 @@ void search_word_pairs(string word, node*& root){
 
   if (root != nullptr) {
     search_word_pairs(word, root->before);
-    cout << "\"" << *root << " " << root->before << endl;
+    print_pair_word(root);
     search_word_pairs(word, root->after);
   }
 
