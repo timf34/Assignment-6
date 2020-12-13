@@ -85,14 +85,14 @@ bool build_tree(string new_word, string next_word, node*& tree){
     //tree->pair_tree_root->assign(next_word); This was causing the errors! be careful, use VCS when changing strategy so as not to leave anything straggling!!!!
     //cout << tree->pair_tree_root << endl;
     cout << new_word << " ";
-		build_pair_tree(next_word, tree);
+		build_pair_tree(next_word, tree->pair_tree_root);
     response = true; // it is a new word
     //cout << new_word << endl;
 	} else {
 		if (new_word == *tree) {
 			tree->count++;
 			response = false; // it is not a new word
-      build_pair_tree(next_word, tree);
+      build_pair_tree(next_word, tree->pair_tree_root);
       //cout << new_word << ": " << tree->count <<endl;
 		} else {
 			if (new_word < *tree) {
@@ -106,13 +106,13 @@ bool build_tree(string new_word, string next_word, node*& tree){
 }
 //USE VCS!!!!
 void build_pair_tree(string next_word, node*& tree){
-  node* placeholder = tree->pair_tree_root;
+  node* placeholder = tree;
   //cout << endl << "placeholder: " << placeholder << endl;
 
-  if (tree->pair_tree_root == nullptr){
+  if (tree == nullptr){
     node* first_pair = new node();
     first_pair->assign(next_word);
-    tree->pair_tree_root = first_pair;
+    tree= first_pair;
     cout << next_word << endl;
     //cout << next_word << " " << tree->pair_tree_root << endl;
   
